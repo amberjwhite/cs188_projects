@@ -84,26 +84,7 @@ class ReflexAgent(Agent):
 
         "*** YOUR CODE HERE ***"
 
-
-        #return big number for good move
-        #       small number for dangerous moves
-
-
         print("successorGameState : \n", currentGameState.generatePacmanSuccessor(action))
-
-        #print("newPos =", successorGameState.getPacmanPosition())
-
-        #print("newFood :\n", successorGameState.getFood())
-
-        #print("newGhostPos =", successorGameState.getGhostPosition(1))
-
-        #print("newGhostStates =", successorGameState.getGhostStates())
-
-        #print("numGhostStates =", len(newGhostStates))
-
-        #print("newScaredTimes =", [ghostState.scaredTimer for ghostState in newGhostStates])
-        
-        #print("grid height ", action == 'North')
 
         #check if its legal move
         if (not action in currentGameState.getLegalActions()):
@@ -353,50 +334,3 @@ def betterEvaluationFunction(currentGameState):
     """
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
-
-
-
-
-############
-
-def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    fringe = util.Queue()
-    start = (problem.getStartState(), [], [])
-    fringe.push(start)
-    visted = []
-
-    while not fringe.isEmpty():
-        point, directions, cost = fringe.pop()
-        #print("bfs point poppped", point)
-        if problem.isGoalState(point):
-            
-            return directions
-        elif not point in visted:
-            visted += [point]
-            for state, d, c in problem.getSuccessors(point):
-                fringe.push((state, directions + [d], cost + [c]))
-    #util.raiseNotDefined()
-
-def mazeDistance(point1, point2, gameState):
-    """
-    Returns the maze distance between any two points, using the search functions
-    you have already built. The gameState can be any game state -- Pacman's
-    position in that state is ignored.
-
-    Example usage: mazeDistance( (2,4), (5,6), gameState)
-
-    This might be a useful helper function for your ApproximateSearchAgent.
-    """
-    x1, y1 = point1
-    x2, y2 = point2
-    walls = gameState.getWalls()
-    assert not walls[x1][y1], 'point1 is a wall: ' + str(point1)
-    assert not walls[x2][y2], 'point2 is a wall: ' + str(point2)
-    prob = PositionSearchProblem(gameState, start=point1, goal=point2, warn=False, visualize=False)
-    return len(breadthFirstSearch(prob))
-
-
-# Abbreviation
-better = betterEvaluationFunction

@@ -299,23 +299,24 @@ class MinimaxAgent(MultiAgentSearchAgent):
         #global depth
         #global numAgents
 
-        depth = self.depth
 
-        currDepth = 0
+
         numAgents = gameState.getNumAgents()
-        currAgentIndex = 0
+
+        print("depth: ", self.depth)
+        print("number of agents: ", numAgents)
+        print('')
+
+        #successorState = gameState.generateSuccessor(0, action)
+        #successorState = gameState.generateSuccessor(1, action)
+        #successorState = gameState.generateSuccessor(0, action)
+        #successorState = gameState.generateSuccessor(1, action)
+
 
         def value(state, index):
-            #global depth
-            print('next move from player', index%numAgents)
-            print(numAgents)
-            print(self.depth)
-
             if (self.depth == 0):
-                print('calling getScore')
                 score = self.evaluationFunction(state)
                 print('Score: ', score)
-                #######################################self.depth += 1
                 return (score, 'terminal state')
             elif (index%numAgents == 0):
                 #MAX
@@ -323,25 +324,24 @@ class MinimaxAgent(MultiAgentSearchAgent):
                 return (v, action)
             else:
                 #MIN
-                print('call to min')
                 if ((index + 1)%numAgents) == 0:
                     self.depth -= 1
                 v, action = min_value(state, index%numAgents)
 
-                #depth += 1
 
-                print('')
                 return (v, action)
 
 
         def max_value(state, index):
             bestValue = -1 * float('inf')
             bestAction = 'Stop'
+            print("type (pacman) ", index)
             for action in state.getLegalActions(index):
-                successorState = gameState.generateSuccessor(index, action)
+                successorState = state.generateSuccessor(index, action)
                 print('pacman action: ', action)
-                if (successorState.isLose() | successorState.isWin()):
+                if (successorState.isWin()):
                     successorValue = successorState.getScore()
+                    #bestAction = 
                 else:
                     successorValue, prevAction = value(successorState, index + 1)
 
@@ -358,32 +358,38 @@ class MinimaxAgent(MultiAgentSearchAgent):
         def min_value(state, index):
             #global depth
             bestValue = float('inf')
+            print(state.getLegalActions(index))
             bestAction = 'Stop'
+            print("type (ghost) ", index)
             for action in state.getLegalActions(index):
-                successorState = gameState.generateSuccessor(index, action)
+                successorState = state.generateSuccessor(index, action)
                 print('ghost action: ', action)
                 if (successorState.isLose() | successorState.isWin()):
                     successorValue = successorState.getScore()
+                    bestAction = action #############################################
                 else:
                     successorValue, prevAction = value(successorState, index + 1)
-                
+                    
                 if (successorValue < bestValue):
-                    print('successorValue, ', successorValue)
                     bestValue = successorValue
                     bestAction = action
             if not state.getLegalActions(index):
-                bestValue, bestAction = value(state, index + 1)
-            print('value : ', bestValue)
+                #bestValue, bestAction = #value(state, index + 1)
+                bestValue = state.getScore() #value(state, index + 1)
+                bestAction = 'Stop'
             if ((index + 1)%numAgents == 0):
                 self.depth += 1
                 #finished 1 depth, just finished calls for the last ghost
+            if not bestAction:
+                print(state.getLegalActions(index))
+
             return (bestValue, bestAction)
 
 
 
         action = value(gameState, 0)[1]
         print('ACTION: ', action)
-        return action
+        return   
 
             
 
